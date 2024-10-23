@@ -1,41 +1,41 @@
 #include<stdio.h>
 #include<windows.h>
 #include<stdlib.h>
+#include<functional>
 
 
-typedef void(*PFunc)(int*, int, int);
+typedef void(*PFunc)(int*);
 
-void DispResult(int* s, int dice, int playerNumber) {
-	int answer;
-	answer = dice % 2;
-	if (answer == playerNumber) {
-		printf("dice=%d\n", dice);
-		printf("正解\n");
-	}
-	else {
-		printf("dice=%d\n", dice);
-		printf("不正解\n");
-	}
+void DispResult(int* s) {}
 
-}
-
-void SetTimeOut(PFunc P, int second, int dice, int playerNumber) {
+void SetTimeOut(PFunc P, int second) {
 	Sleep(second *= 600);
-	P(&second, dice, playerNumber);
+	P(&second);
 }
 
 int main() {
 	int playerNumber = 0;
-	int dice = 0;
+	std::function<void(void)>hantyo = [=]() {
+		int dice = rand() % 6 + 1;
+		int answer;
+		answer = dice % 2;
+		if (answer == playerNumber) {
+			printf("dice=%d\n", dice);
+			printf("正解\n");
+		}
+		else {
+			printf("dice=%d\n", dice);
+			printf("不正解\n");
+		}
+		};
 	printf("半なら0,丁なら1と入力せよ\n");
 	printf("半か丁か : ");
 	scanf_s("%d", &playerNumber);
 	printf("\n");
 	PFunc P;
-	dice = rand() % 6 + 1;
 	P = DispResult;
-	SetTimeOut(P, 5, dice, playerNumber);
-
+	SetTimeOut(P, 5);
+	hantyo();
 
 	return 0;
 }
