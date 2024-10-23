@@ -1,35 +1,41 @@
 #include<stdio.h>
+#include<windows.h>
+#include<stdlib.h>
 
-int Recursive(int Rhw, int hw,int timer, int RhwResult, int hwResult) {
-	//一般の合計金額
-	hwResult = hw * timer;
 
-	//再帰の合計金額
-	RhwResult +=  Rhw;
+typedef void(*PFunc)(int*, int, int);
 
-	if (hwResult <= RhwResult) {
-		printf("再帰のお金と時間  お金=%d,時給=%d,時間=%d\n", RhwResult, Rhw, timer);
-		printf("一般のお金と時間  お金=%d,時給=%d,時間=%d\n", hwResult, hw, timer);
-
-		return 0;
-	}else {
-		printf("再帰のお金と時間  お金=%d,時給=%d,時間=%d\n", RhwResult, Rhw, timer);
-		printf("一般のお金と時間  お金=%d,時給=%d,時間=%d\n\n", hwResult, hw, timer);
-		return Recursive(Rhw * 2 - 50, hw, timer + 1, RhwResult, hwResult);
+void DispResult(int* s, int dice, int playerNumber) {
+	int answer;
+	answer = dice % 2;
+	if (answer == playerNumber) {
+		printf("dice=%d\n", dice);
+		printf("正解\n");
 	}
-	
+	else {
+		printf("dice=%d\n", dice);
+		printf("不正解\n");
+	}
+
 }
 
+void SetTimeOut(PFunc P, int second, int dice, int playerNumber) {
+	Sleep(second *= 600);
+	P(&second, dice, playerNumber);
+}
 
 int main() {
-	int Rhw = 100;//再帰 時給
-	int hw = 1072;//一般的 hourly wage(時給)
-	int timer = 1;//時間（比べるのに使う）
+	int playerNumber = 0;
+	int dice = 0;
+	printf("半なら0,丁なら1と入力せよ\n");
+	printf("半か丁か : ");
+	scanf_s("%d", &playerNumber);
+	printf("\n");
+	PFunc P;
+	dice = rand() % 6 + 1;
+	P = DispResult;
+	SetTimeOut(P, 5, dice, playerNumber);
 
-	int RhwResult = 0;//再帰の計算結果
-	int hwResult = 0;//一般の計算結果
-
-	Recursive(Rhw,hw,timer, RhwResult, hwResult);
 
 	return 0;
 }
